@@ -6,8 +6,10 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
+    "annict": "0.0.4",
     "react": "^15.1.0",
     "react-native": "0.27.2",
+    "react-native-webview-bridge": "^0.20.3",
     "realm": "^0.13.2"
   }
 }
