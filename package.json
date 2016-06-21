@@ -9,7 +9,7 @@
     "annict": "0.0.4",
     "react": "^15.1.0",
     "react-native": "0.27.2",
-    "react-native-webview-bridge": "^0.20.3",
+    "react-native-webview-bridge": "git+https://github.com/alinz/react-native-webview-bridge.git",
     "realm": "^0.13.2"
   }
 }
