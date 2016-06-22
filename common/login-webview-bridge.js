@@ -3,7 +3,8 @@ import WebViewBridge from 'react-native-webview-bridge';
 import {
   AUTHORIZE_URI,
   CLIENT_ID,
-  REDIRECT_URI
+  REDIRECT_URI,
+  TOKEN_PUBLISHER_URI
 } from './constants/client-constants';
 
 
@@ -21,16 +22,36 @@ const injectJavaScript = `
 `;
 
 export class LoginWebViewBridge extends Component {
+
+  static propTypes = {
+    onGetToken: PropTypes.func.required
+  }
+
   onBridgeMessage(message) {
+    const { onGetToken } = this.props;
+
     switch (message) {
       case 'continue':
         // auth step
-        console.log('continue');
         break;
 
       default:
         // auth code
-        console.log(message);
+        //TODO: validate message as code
+
+        fetch(TOKEN_PUBLISHER_URI, {
+          method: 'POST',
+          headers: {
+            'Accept'       : 'application/json',
+            'Content-Type' : 'application/json'
+          },
+          body: JSON.stringify({
+            code: message
+          })
+        })
+        .then(response => response.json())
+        .then(onGetToken)
+        .done();
         break;
     }
   }
