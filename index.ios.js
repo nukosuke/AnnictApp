@@ -17,6 +17,7 @@ import {
 import { LoginModal } from './common/login-modal';
 import { ListView } from 'realm/react-native';
 import { getTheme } from 'react-native-material-kit';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   User,
   Token,
@@ -124,21 +125,26 @@ class AnnictApp extends Component {
           unselectedTintColor='#666'
           tintColor='#f51234'
           barTintColor='white'>
-          <TabBarIOS.Item
-            title='放送予定'>
-          </TabBarIOS.Item>
-          <TabBarIOS.Item
-            title='記録'>
-          </TabBarIOS.Item>
-          <TabBarIOS.Item
+          <Icon.TabBarItemIOS
+            iconName='home'
+            title='ホーム'>
+          </Icon.TabBarItemIOS>
+          <Icon.TabBarItemIOS
+            iconName='movie'
             title='作品'>
-          </TabBarIOS.Item>
-          <TabBarIOS.Item
-            title='records'>
-          </TabBarIOS.Item>
-          <TabBarIOS.Item
+          </Icon.TabBarItemIOS>
+          <Icon.TabBarItemIOS
+            iconName='add'
+            title='記録'>
+          </Icon.TabBarItemIOS>
+          <Icon.TabBarItemIOS
+            iconName='event'
+            title='放送予定'>
+          </Icon.TabBarItemIOS>
+          <Icon.TabBarItemIOS
+            iconName='settings'
             title='設定'>
-          </TabBarIOS.Item>
+          </Icon.TabBarItemIOS>
         </TabBarIOS>
       </View>
     );
