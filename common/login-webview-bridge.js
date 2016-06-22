@@ -39,7 +39,7 @@ export class LoginWebViewBridge extends Component {
     return (
       <WebViewBridge
         ref='auth_webview_bridge'
-        onBridgeMessage={(msg) => console.log(msg)}
+        onBridgeMessage={this.onBridgeMessage}
         injectedJavaScript={injectJavaScript}
         source={{uri: `${AUTHORIZE_URI}?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}`}}
       />
