@@ -10,6 +10,7 @@
     "react": "^15.1.0",
     "react-native": "0.27.2",
     "react-native-material-kit": "^0.3.2",
+    "react-native-vector-icons": "^2.0.3",
     "react-native-webview-bridge": "git+https://github.com/alinz/react-native-webview-bridge.git",
     "realm": "^0.13.2"
   }
