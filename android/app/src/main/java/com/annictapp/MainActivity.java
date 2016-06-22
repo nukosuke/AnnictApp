@@ -1,6 +1,8 @@
 package com.annictapp;
 
 import com.facebook.react.ReactActivity;
+import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
+import com.oblador.vectoricons.VectorIconsPackage;
 import com.github.xinthink.rnmk.ReactMaterialKitPackage;
 import io.realm.react.RealmReactPackage;
 import com.facebook.react.ReactPackage;
@@ -37,6 +39,8 @@ public class MainActivity extends ReactActivity {
     protected List<ReactPackage> getPackages() {
         return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new WebViewBridgePackage(),
+            new VectorIconsPackage(),
             new ReactMaterialKitPackage(),
             new RealmReactPackage()
         );
