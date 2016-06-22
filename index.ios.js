@@ -10,11 +10,13 @@ import {
   StyleSheet,
   Text,
   View,
+  ScrollView,
   NavigatorIOS,
   TabBarIOS
 } from 'react-native';
 import { LoginModal } from './common/login-modal';
 import { ListView } from 'realm/react-native';
+import { getTheme } from 'react-native-material-kit';
 import {
   User,
   Token,
@@ -32,6 +34,8 @@ import {
   REDIRECT_URI
 } from './common/constants/client-constants'
 
+
+
 class AnnictApp extends Component {
   constructor(props) {
     super(props);
@@ -43,6 +47,8 @@ class AnnictApp extends Component {
       path: 'annict.realm',
       schema: [User, Token, Work, Episode, Record, RecordList]
     });
+
+    this.theme = getTheme();
 
     this.state = {
       access_token: null,
@@ -61,13 +67,13 @@ class AnnictApp extends Component {
       //TODO: set visible authenticate modal by props
       console.log('no token');
     }
+
+    console.log(this.theme.cardStyle);
   }
 
   componentDidMount() {
     this.annict.Record.get({})
     .then(body => {
-      //this.setState({ records: body.records });
-      console.log(body);
       this.setState({ records: this.ds.cloneWithRows(body.records) });
     })
     .catch(err => {
@@ -91,12 +97,28 @@ class AnnictApp extends Component {
           }}
         />
 
-        <View style={{flex: 1, paddingTop: 64}}>
-          <ListView
-            dataSource={this.state.records}
-            renderRow={(rowData) => <Text>{rowData.user.name}</Text>}
-          />
-        </View>
+        <ScrollView style={{flex: 1, marginTop: 65, paddingBottom: 512}}>
+          <View style={{paddingLeft: 8, paddingRight: 8}}>
+            <ListView
+              enableEmptySections={true}
+              dataSource={this.state.records}
+              renderRow={(rowData) => {
+                return (
+                  <View style={{paddingTop: 4, paddingBottom: 4}}>
+                    <View style={this.theme.cardStyle}>
+                      <Text style={{padding: 15}}>
+                        {rowData.user.name}
+                      </Text>
+                      <Text style={this.theme.cardContentStyle}>
+                        {rowData.comment}
+                      </Text>
+                    </View>
+                  </View>
+                );
+              }}
+            />
+          </View>
+        </ScrollView>
 
         <TabBarIOS
           unselectedTintColor='#666'

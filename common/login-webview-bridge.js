@@ -24,7 +24,7 @@ const injectJavaScript = `
 export class LoginWebViewBridge extends Component {
 
   static propTypes = {
-    onGetToken: PropTypes.func.required
+    onGetToken: PropTypes.func.isRequired
   }
 
   onBridgeMessage(message) {

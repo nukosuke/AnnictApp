@@ -4,7 +4,7 @@ import { LoginWebViewBridge }          from './login-webview-bridge';
 
 export class LoginModal extends Component {
   static propTypes = {
-    realm: PropTypes.object.required
+    realm: PropTypes.object.isRequired
   }
 
   constructor(props) {
