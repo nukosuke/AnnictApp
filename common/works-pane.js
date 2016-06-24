@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { View, Text, TextInput } from 'react-native';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { ListView } from 'realm/react-native';
 import { getTheme } from 'react-native-material-kit';
 
@@ -20,19 +21,42 @@ export class WorksPane extends Component {
           />
         </View>
 
-        <View style={{marginTop: 65}}>
-          <ListView
-            enableEmptySections={true}
-            dataSource={this.props.works}
-            renderRow={(rowData) => {
-              return (
-                <View style={theme.cardStyle}>
-                  <Text>rowData.title</Text>
-                </View>
-              );
-            }}
-          />
-        </View>
+        <ScrollableTabView
+          tabBarUnderlineColor='#f85b73'
+          tabBarActiveTextColor='#f85b73'
+        >
+
+          <View tabLabel='見てる'>
+            <ListView
+              enableEmptySections={true}
+              dataSource={this.props.works}
+              renderRow={(rowData) => {
+                return (
+                  <View style={theme.cardStyle}>
+                    <Text>rowData.title</Text>
+                  </View>
+                );
+              }}
+            />
+          </View>
+
+          <View tabLabel='見たい'>
+            <Text>見たい</Text>
+          </View>
+
+          <View tabLabel='見た'>
+            <Text>見た</Text>
+          </View>
+
+          <View tabLabel='中断'>
+            <Text>中断</Text>
+          </View>
+
+          <View tabLabel='中止'>
+            <Text>中止</Text>
+          </View>
+
+        </ScrollableTabView>
       </View>
     );
   }
