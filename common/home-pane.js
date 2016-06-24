@@ -15,7 +15,7 @@ export class HomePane extends Component {
     return (
       <View style={{flex:1}}>
         <NavigatorIOS
-          barTintColor='#333'
+          barTintColor='#444'
           titleTextColor='#eee'
           initialRoute={{
             component: View,

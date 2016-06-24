@@ -9,6 +9,7 @@ import Annict from 'annict';
 import {
   AppRegistry,
   StyleSheet,
+  StatusBar,
   Text,
   View,
   TabBarIOS
@@ -113,6 +114,10 @@ class AnnictApp extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar
+          barStyle='light-content'
+        />
+
         <LoginModal realm={this.realm} />
 
         <TabBarIOS
