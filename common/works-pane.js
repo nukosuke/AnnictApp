@@ -24,6 +24,8 @@ export class WorksPane extends Component {
         <ScrollableTabView
           tabBarUnderlineColor='#f85b73'
           tabBarActiveTextColor='#f85b73'
+          tabBarInactiveTextColor='#666'
+          tabBarBackgroundColor='white'
         >
 
           <View tabLabel='見てる'>
