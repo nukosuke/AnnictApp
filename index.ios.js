@@ -10,13 +10,12 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   NavigatorIOS,
+  Image,
   TabBarIOS
 } from 'react-native';
 import { LoginModal } from './common/login-modal';
 import { ListView } from 'realm/react-native';
-import { getTheme } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   User,
@@ -35,6 +34,8 @@ import {
   REDIRECT_URI
 } from './common/constants/client-constants'
 
+import { WorksPane } from './common/works-pane';
+import { HomePane } from './common/home-pane';
 
 
 class AnnictApp extends Component {
@@ -49,13 +50,25 @@ class AnnictApp extends Component {
       schema: [User, Token, Work, Episode, Record, RecordList]
     });
 
-    this.theme = getTheme();
-
     this.state = {
+      selectedTab: 'home',
       access_token: null,
-      records: this.ds.cloneWithRows([]),
+      records: [],
+      works: [],
     }
   }
+
+  componentDidMount() {
+    this.annict.Record.get({})
+    .then(body => {
+      this.setState({ records: body.records });
+    })
+    .catch(err => {
+      console.log(err);
+    })
+    .done();
+  }
+
 
   componentWillMount() {
     const token = this.realm.objects('Token')[0];
@@ -68,19 +81,26 @@ class AnnictApp extends Component {
       //TODO: set visible authenticate modal by props
       console.log('no token');
     }
-
-    console.log(this.theme.cardStyle);
   }
 
-  componentDidMount() {
-    this.annict.Record.get({})
-    .then(body => {
-      this.setState({ records: this.ds.cloneWithRows(body.records) });
-    })
-    .catch(err => {
-      console.log(err);
-    })
-    .done();
+  _renderPane(pane) {
+    switch (pane) {
+      case 'home':
+      default:
+        return (<HomePane annict={this.annict} records={this.ds.cloneWithRows(this.state.records)} />);
+
+      case 'works':
+        return (<WorksPane annict={this.annict} works={this.ds.cloneWithRows(this.state.works)} />);
+
+      case 'records':
+        return (<HomePane annict={this.annict} records={this.ds.cloneWithRows(this.state.records)} />);
+
+      case 'programs':
+        return (<HomePane annict={this.annict} records={this.ds.cloneWithRows(this.state.records)} />);
+
+      case 'settings':
+        return (<HomePane annict={this.annict} records={this.ds.cloneWithRows(this.state.records)} />);
+    }
   }
 
   render() {
@@ -93,33 +113,14 @@ class AnnictApp extends Component {
           titleTextColor='#eee'
           initialRoute={{
             component: View,
-            title: 'Annict',
+            title: 'ホーム',
             //pass
           }}
         />
 
-        <ScrollView style={{flex: 1, marginTop: 65, paddingBottom: 512}}>
-          <View style={{paddingLeft: 8, paddingRight: 8}}>
-            <ListView
-              enableEmptySections={true}
-              dataSource={this.state.records}
-              renderRow={(rowData) => {
-                return (
-                  <View style={{paddingTop: 4, paddingBottom: 4}}>
-                    <View style={this.theme.cardStyle}>
-                      <Text style={{padding: 15}}>
-                        {rowData.user.name}
-                      </Text>
-                      <Text style={this.theme.cardContentStyle}>
-                        {rowData.comment}
-                      </Text>
-                    </View>
-                  </View>
-                );
-              }}
-            />
-          </View>
-        </ScrollView>
+        <Image source={require('./common/Images/annict_logo.png')}
+          style={{position: 'absolute', transform: [{scale: 0.3}]}} />
+
 
         <TabBarIOS
           unselectedTintColor='#666'
@@ -127,23 +128,53 @@ class AnnictApp extends Component {
           barTintColor='white'>
           <Icon.TabBarItemIOS
             iconName='home'
-            title='ホーム'>
+            title='ホーム'
+            selected={this.state.selectedTab === 'home'}
+            onPress={() => {
+              this.setState({ selectedTab: 'home' });
+            }}
+          >
+            {this._renderPane('home')}
           </Icon.TabBarItemIOS>
           <Icon.TabBarItemIOS
             iconName='movie'
-            title='作品'>
+            title='作品'
+            selected={this.state.selectedTab === 'works'}
+            onPress={() => {
+              this.setState({ selectedTab: 'works' });
+            }}
+          >
+            {this._renderPane('works')}
           </Icon.TabBarItemIOS>
           <Icon.TabBarItemIOS
             iconName='add'
-            title='記録'>
+            title='記録'
+            selected={this.state.selectedTab === 'records'}
+            onPress={() => {
+              this.setState({ selectedTab: 'records' });
+            }}
+          >
+            {this._renderPane('works')}
           </Icon.TabBarItemIOS>
           <Icon.TabBarItemIOS
             iconName='event'
-            title='放送予定'>
+            title='放送予定'
+            selected={this.state.selectedTab === 'programs'}
+            onPress={() => {
+              this.setState({ selectedTab: 'programs' });
+            }}
+          >
+            {this._renderPane('works')}
           </Icon.TabBarItemIOS>
           <Icon.TabBarItemIOS
             iconName='settings'
-            title='設定'>
+            title='設定'
+            selected={this.state.selectedTab === 'settings'}
+            onPress={() => {
+              this.setState({ selectedTab: 'settings' });
+            }}
+          >
+            {this._renderPane('works')}
           </Icon.TabBarItemIOS>
         </TabBarIOS>
       </View>
