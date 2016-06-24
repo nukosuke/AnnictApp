@@ -13,9 +13,9 @@ export class WorksPane extends Component {
   render() {
     return (
       <View>
-        <View style={{paddingHorizontal: 8, paddingTop: 24, paddingBottom: 8, backgroundColor: '#444'}}>
+        <View style={{paddingHorizontal: 10, paddingTop: 24, paddingBottom: 8, backgroundColor: '#444'}}>
           <TextInput
-            style={{height: 25, borderRadius: 2, borderColor: '#e1e1e1', borderWidth: 1, backgroundColor: '#eee', padding: 4, fontSize: 12}}
+            style={{height: 25, borderRadius: 2, borderColor: '#e1e1e1', borderWidth: 1, backgroundColor: 'white', padding: 4, fontSize: 12}}
             placeholder='キーワードで検索...'
           />
         </View>
