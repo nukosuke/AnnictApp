@@ -122,7 +122,7 @@ class AnnictApp extends Component {
 
         <TabBarIOS
           unselectedTintColor='#666'
-          tintColor='#f51234'
+          tintColor='#f85b73'
           barTintColor='white'>
           <Icon.TabBarItemIOS
             iconName='home'
