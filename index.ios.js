@@ -5,18 +5,18 @@
  */
 import React, { Component } from 'react';
 import Realm from 'realm';
+import Annict from 'annict';
 import {
   AppRegistry,
   StyleSheet,
   Text,
   View,
-  NavigatorIOS,
-  Image,
   TabBarIOS
 } from 'react-native';
-import { LoginModal } from './common/login-modal';
+
 import { ListView } from 'realm/react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+
 import {
   User,
   Token,
@@ -26,16 +26,18 @@ import {
   RecordList,
 } from './common/schema';
 
-import Annict from 'annict';
-
 import {
   AUTHORIZE_URI,
   CLIENT_ID,
   REDIRECT_URI
 } from './common/constants/client-constants'
 
-import { WorksPane } from './common/works-pane';
-import { HomePane } from './common/home-pane';
+import {
+  HomePane,
+  WorksPane,
+  SettingsPane,
+  LoginModal
+} from './common';
 
 
 class AnnictApp extends Component {
@@ -52,9 +54,14 @@ class AnnictApp extends Component {
 
     this.state = {
       selectedTab: 'home',
+      title: 'ホーム',
       access_token: null,
       records: [],
       works: [],
+      settings: [
+        { name: '利用規約' },
+        { name: 'ログアウト' },
+      ],
     }
   }
 
@@ -99,7 +106,7 @@ class AnnictApp extends Component {
         return (<HomePane annict={this.annict} records={this.ds.cloneWithRows(this.state.records)} />);
 
       case 'settings':
-        return (<HomePane annict={this.annict} records={this.ds.cloneWithRows(this.state.records)} />);
+        return (<SettingsPane annict={this.annict} settings={this.ds.cloneWithRows(this.state.settings)} />);
     }
   }
 
@@ -107,20 +114,6 @@ class AnnictApp extends Component {
     return (
       <View style={styles.container}>
         <LoginModal realm={this.realm} />
-
-        <NavigatorIOS
-          barTintColor='#333'
-          titleTextColor='#eee'
-          initialRoute={{
-            component: View,
-            title: 'ホーム',
-            //pass
-          }}
-        />
-
-        <Image source={require('./common/Images/annict_logo.png')}
-          style={{position: 'absolute', transform: [{scale: 0.3}]}} />
-
 
         <TabBarIOS
           unselectedTintColor='#666'
@@ -147,7 +140,7 @@ class AnnictApp extends Component {
             {this._renderPane('works')}
           </Icon.TabBarItemIOS>
           <Icon.TabBarItemIOS
-            iconName='add'
+            iconName='add-box'
             title='記録'
             selected={this.state.selectedTab === 'records'}
             onPress={() => {
@@ -171,10 +164,10 @@ class AnnictApp extends Component {
             title='設定'
             selected={this.state.selectedTab === 'settings'}
             onPress={() => {
-              this.setState({ selectedTab: 'settings' });
+              this.setState({ title: '設定', selectedTab: 'settings' });
             }}
           >
-            {this._renderPane('works')}
+            {this._renderPane('settings')}
           </Icon.TabBarItemIOS>
         </TabBarIOS>
       </View>
