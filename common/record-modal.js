@@ -1,9 +1,17 @@
 import React, { Component, PropTypes } from 'react';
-import { Modal, View, Text, TextInput, StatusBar } from 'react-native';
+import {
+  Modal,
+  View,
+  Text,
+  TouchableHighlight,
+  TextInput,
+  StatusBar
+} from 'react-native';
 
 export class RecordModal extends Component {
   static propTypes = {
-    visible: PropTypes.bool.isRequired
+    visible: PropTypes.bool.isRequired,
+    onCancel: PropTypes.func.isRequired
   }
 
   render() {
@@ -16,7 +24,9 @@ export class RecordModal extends Component {
         <View style={{paddingTop: 28}}>
           <View style={{flexDirection: 'row'}}>
             <Text style={{flex: 4}}>aaa</Text>
-            <Text style={{flex: 1}}>aaa</Text>
+            <TouchableHighlight onPress={this.props.onCancel}>
+              <Text style={{flex: 1}}>キャンセル</Text>
+            </TouchableHighlight>
           </View>
           <TextInput multiline={true} placeholder='感想を記録しましょう' />
           <View>

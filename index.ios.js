@@ -37,7 +37,9 @@ import {
   HomePane,
   WorksPane,
   SettingsPane,
-  LoginModal
+  ProgramsPane,
+  LoginModal,
+  RecordModal
 } from './common';
 
 
@@ -63,6 +65,7 @@ class AnnictApp extends Component {
         { name: '利用規約' },
         { name: 'ログアウト' },
       ],
+      recordModalVisible: false
     }
   }
 
@@ -104,7 +107,7 @@ class AnnictApp extends Component {
         return (<HomePane annict={this.annict} records={this.ds.cloneWithRows(this.state.records)} />);
 
       case 'programs':
-        return (<HomePane annict={this.annict} records={this.ds.cloneWithRows(this.state.records)} />);
+        return (<ProgramsPane annict={this.annict} programs={this.ds.cloneWithRows([])} />);
 
       case 'settings':
         return (<SettingsPane annict={this.annict} settings={this.ds.cloneWithRows(this.state.settings)} />);
@@ -119,6 +122,12 @@ class AnnictApp extends Component {
         />
 
         <LoginModal realm={this.realm} />
+        <RecordModal
+          visible={this.state.recordModalVisible}
+          onCancel={() => {
+            this.setState({ recordModalVisible: false });
+          }}
+        />
 
         <TabBarIOS
           unselectedTintColor='#666'
@@ -147,9 +156,8 @@ class AnnictApp extends Component {
           <Icon.TabBarItemIOS
             iconName='add-box'
             title='記録'
-            selected={this.state.selectedTab === 'records'}
             onPress={() => {
-              this.setState({ selectedTab: 'records' });
+              this.setState({ recordModalVisible: true });
             }}
           >
             {this._renderPane('works')}
@@ -162,7 +170,7 @@ class AnnictApp extends Component {
               this.setState({ selectedTab: 'programs' });
             }}
           >
-            {this._renderPane('works')}
+            {this._renderPane('programs')}
           </Icon.TabBarItemIOS>
           <Icon.TabBarItemIOS
             iconName='settings'
