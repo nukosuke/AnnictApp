@@ -25,7 +25,7 @@ export class ProgramsPane extends Component {
             dayHeadings={['日', '月', '火', '水', '木', '金', '土']}
             prevButtonText={'< 前月'}
             nextButtonText={'翌月 >'}
-            onDateSelect={(date) => this.onDateSelect(date)}
+            onDateSelect={this.onDateSelect}
             onTouchPrev={this.onPrev}
             onTouchNext={this.onNext}
             onSwipePrev={this.onPrev}
@@ -49,6 +49,10 @@ export class ProgramsPane extends Component {
 
   onNext() {
     // load next month animes
+  }
+
+  onDateSelect(date) {
+    // fetch anime on date
   }
 
 }
