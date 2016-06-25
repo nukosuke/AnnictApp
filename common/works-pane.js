@@ -6,9 +6,26 @@ import { getTheme } from 'react-native-material-kit';
 
 const theme = getTheme();
 
+const status = [
+  { label: '見てる', param: 'watching' },
+  { label: '見たい', param: 'wanna_watch' },
+  { label: '見た', param: 'watched' },
+  { label: '中断', param: 'on_hold' },
+  { label: '中止', param: 'stop_watching' },
+]
+
 export class WorksPane extends Component {
   static propTypes = {
-    works: PropTypes.object.isRequired
+    annict: PropTypes.object.isRequired,
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      works: []
+    };
+
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
   }
 
   render() {
@@ -26,38 +43,31 @@ export class WorksPane extends Component {
           tabBarActiveTextColor='#f85b73'
           tabBarInactiveTextColor='#666'
           tabBarBackgroundColor='white'
+          onChangeTab={({i}) => {
+            this.props.annict.Me.Work.get({ filter_status: status[i].param })
+            .then(res => {
+              this.setState({ works: res.works });
+            })
+            .done();
+          }}
         >
-
-          <View tabLabel='見てる'>
-            <ListView
-              enableEmptySections={true}
-              dataSource={this.props.works}
-              renderRow={(rowData) => {
-                return (
-                  <View style={theme.cardStyle}>
-                    <Text>rowData.title</Text>
-                  </View>
-                );
-              }}
-            />
-          </View>
-
-          <View tabLabel='見たい'>
-            <Text>見たい</Text>
-          </View>
-
-          <View tabLabel='見た'>
-            <Text>見た</Text>
-          </View>
-
-          <View tabLabel='中断'>
-            <Text>中断</Text>
-          </View>
-
-          <View tabLabel='中止'>
-            <Text>中止</Text>
-          </View>
-
+          {status.map((tab) => {
+            return (
+              <View tabLabel={tab.label} key={tab.param}>
+                <ListView
+                  enableEmptySections={true}
+                  dataSource={this.ds.cloneWithRows(this.state.works)}
+                  renderRow={(rowData) => {
+                    return (
+                      <View style={theme.cardStyle}>
+                        <Text>{rowData.title}</Text>
+                      </View>
+                    );
+                  }}
+                />
+              </View>
+            );
+          })}
         </ScrollableTabView>
       </View>
     );
