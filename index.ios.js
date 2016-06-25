@@ -70,7 +70,7 @@ class AnnictApp extends Component {
   }
 
   componentDidMount() {
-    this.annict.Record.get({})
+    this.annict.Record.get({ sort_id: 'desc' })
     .then(body => {
       this.setState({ records: body.records });
     })
