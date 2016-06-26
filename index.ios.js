@@ -59,8 +59,6 @@ class AnnictApp extends Component {
       selectedTab: 'home',
       title: 'ホーム',
       access_token: null,
-      records: [],
-      works: [],
       settings: [
         { name: '利用規約' },
         { name: 'ログアウト' },
@@ -68,18 +66,6 @@ class AnnictApp extends Component {
       recordModalVisible: false
     }
   }
-
-  componentDidMount() {
-    this.annict.Record.get({ sort_id: 'desc' })
-    .then(body => {
-      this.setState({ records: body.records });
-    })
-    .catch(err => {
-      console.log(err);
-    })
-    .done();
-  }
-
 
   componentWillMount() {
     const token = this.realm.objects('Token')[0];
@@ -98,10 +84,10 @@ class AnnictApp extends Component {
     switch (pane) {
       case 'home':
       default:
-        return (<HomePane annict={this.annict} records={this.ds.cloneWithRows(this.state.records)} />);
+        return (<HomePane annict={this.annict} />);
 
       case 'works':
-        return (<WorksPane annict={this.annict} works={this.ds.cloneWithRows(this.state.works)} />);
+        return (<WorksPane annict={this.annict} />);
 
       case 'records':
         return (<HomePane annict={this.annict} records={this.ds.cloneWithRows(this.state.records)} />);

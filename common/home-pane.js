@@ -3,13 +3,37 @@ import { NavigatorIOS, View, ScrollView, Text, Image } from 'react-native';
 import { ListView } from 'realm/react-native';
 import { getTheme } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { LoadingSpinner } from './components'
 
 const theme = getTheme();
 
 export class HomePane extends Component {
   static propTypes = {
-    annict: PropTypes.object.isRequired,
-    records: PropTypes.object.isRequired,
+    annict: PropTypes.object.isRequired
+  }
+
+  constructor(props) {
+    super(props);
+    this.state ={
+      loading: false,
+      records: []
+    }
+
+    this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+  }
+
+  componentDidMount() {
+    this.setState({ loading: true });
+
+    this.props.annict.Record.get({ sort_id: 'desc' })
+    .then(body => {
+      this.setState({ loading: false, records: body.records });
+    })
+    .catch(err => {
+      console.log(err);
+      // alert dialog
+    })
+    .done();
   }
 
   getStarFromRating(rating) {
@@ -68,31 +92,44 @@ export class HomePane extends Component {
         <Image source={require('../common/Images/annict_logo.png')}
           style={{position: 'absolute', transform: [{scale: 0.3}]}} />
 
-        <ScrollView style={{flex: 1, marginTop: 65}}>
-          <View style={{paddingLeft: 8, paddingRight: 8}}>
-            <ListView
-              enableEmptySections={true}
-              dataSource={this.props.records}
-              renderRow={(rowData) => {
-                return (
-                  <View style={{paddingTop: 4, paddingBottom: 4}}>
-                    <View style={theme.cardStyle}>
-                      <Text style={{paddingHorizontal: 15, paddingTop: 15}}>
-                        <Text style={{color: '#f85b73'}}>{rowData.user.name}</Text>
-                        <Text style={{color: '#666'}}> が </Text>
-                        <Text style={{color: '#f85b73'}}>{rowData.work.title} {rowData.episode.number_text}</Text>
-                        <Text style={{color: '#666'}}> を見ました</Text>
-                      </Text>
-                      {this.getStarFromRating(rowData.rating)}
-                      {this.renderComment(rowData.comment)}
-                    </View>
-                  </View>
-                );
-              }}
-            />
-          </View>
-        </ScrollView>
+        {this.renderTimeline()}
+
       </View>
     );
   }
+
+  renderTimeline() {
+    if(this.state.loading) {
+      return (
+        <View style={{marginTop: 65}}>
+          <LoadingSpinner />
+        </View>
+      );
+    }
+    else {
+      return (
+        <ListView
+          enableEmptySections={true}
+          dataSource={this.ds.cloneWithRows(this.state.records)}
+          renderScrollComponent={props => <ScrollView style={{flex: 1, marginTop: 65}} />}
+          renderRow={(rowData) => {
+            return (
+              <View style={{paddingHorizontal: 8, paddingVertical: 4}}>
+                <View style={theme.cardStyle}>
+                  <Text style={{paddingHorizontal: 15, paddingTop: 15}}>
+                    <Text style={{color: '#f85b73'}}>{rowData.user.name}</Text>
+                    <Text style={{color: '#666'}}> が </Text>
+                    <Text style={{color: '#f85b73'}}>{rowData.work.title} {rowData.episode.number_text}</Text>
+                    <Text style={{color: '#666'}}> を見ました</Text>
+                  </Text>
+                  {this.getStarFromRating(rowData.rating)}
+                  {this.renderComment(rowData.comment)}
+                </View>
+              </View>
+            );
+          }}
+        />
+      );
+    } // /else
+  } // /renderTimeline
 }
