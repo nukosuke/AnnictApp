@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { View, Text, TextInput } from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { ListView } from 'realm/react-native';
-import { getTheme } from 'react-native-material-kit';
+import { getTheme, mdl } from 'react-native-material-kit';
 
 const theme = getTheme();
 
@@ -22,10 +22,23 @@ export class WorksPane extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      loading: true,
       works: []
     };
 
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+  }
+
+  renderSpinner(loading) {
+    if (loading) {
+      return (
+        <View style={{padding: 64, alignItems: 'center'}}>
+          <mdl.Spinner strokeColor='#f85b73' />
+        </View>);
+    }
+    else {
+      return;
+    }
   }
 
   render() {
@@ -44,9 +57,11 @@ export class WorksPane extends Component {
           tabBarInactiveTextColor='#666'
           tabBarBackgroundColor='white'
           onChangeTab={({i}) => {
+            this.setState({ loading: true, works: [] });
+
             this.props.annict.Me.Work.get({ filter_status: status[i].param })
             .then(res => {
-              this.setState({ works: res.works });
+              this.setState({ loading: false, works: res.works });
             })
             .done();
           }}
@@ -54,6 +69,7 @@ export class WorksPane extends Component {
           {status.map((tab) => {
             return (
               <View tabLabel={tab.label} key={tab.param}>
+                {this.renderSpinner(this.state.loading)}
                 <ListView
                   enableEmptySections={true}
                   dataSource={this.ds.cloneWithRows(this.state.works)}
