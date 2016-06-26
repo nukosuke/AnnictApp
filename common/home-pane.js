@@ -68,30 +68,28 @@ export class HomePane extends Component {
         <Image source={require('../common/Images/annict_logo.png')}
           style={{position: 'absolute', transform: [{scale: 0.3}]}} />
 
-        <ScrollView style={{flex: 1, marginTop: 65}}>
-          <View style={{paddingLeft: 8, paddingRight: 8}}>
-            <ListView
-              enableEmptySections={true}
-              dataSource={this.props.records}
-              renderRow={(rowData) => {
-                return (
-                  <View style={{paddingTop: 4, paddingBottom: 4}}>
-                    <View style={theme.cardStyle}>
-                      <Text style={{paddingHorizontal: 15, paddingTop: 15}}>
-                        <Text style={{color: '#f85b73'}}>{rowData.user.name}</Text>
-                        <Text style={{color: '#666'}}> が </Text>
-                        <Text style={{color: '#f85b73'}}>{rowData.work.title} {rowData.episode.number_text}</Text>
-                        <Text style={{color: '#666'}}> を見ました</Text>
-                      </Text>
-                      {this.getStarFromRating(rowData.rating)}
-                      {this.renderComment(rowData.comment)}
-                    </View>
-                  </View>
-                );
-              }}
-            />
-          </View>
-        </ScrollView>
+        <ListView
+          enableEmptySections={true}
+          dataSource={this.props.records}
+          renderScrollComponent={props => <ScrollView style={{flex: 1, marginTop: 65}} />}
+          renderRow={(rowData) => {
+            return (
+              <View style={{paddingHorizontal: 8, paddingVertical: 4}}>
+                <View style={theme.cardStyle}>
+                  <Text style={{paddingHorizontal: 15, paddingTop: 15}}>
+                    <Text style={{color: '#f85b73'}}>{rowData.user.name}</Text>
+                    <Text style={{color: '#666'}}> が </Text>
+                    <Text style={{color: '#f85b73'}}>{rowData.work.title} {rowData.episode.number_text}</Text>
+                    <Text style={{color: '#666'}}> を見ました</Text>
+                  </Text>
+                  {this.getStarFromRating(rowData.rating)}
+                  {this.renderComment(rowData.comment)}
+                </View>
+              </View>
+            );
+          }}
+        />
+
       </View>
     );
   }
