@@ -10,8 +10,18 @@ import {
 
 export class RecordModal extends Component {
   static propTypes = {
+    annict: PropTypes.object.isRequired,
     visible: PropTypes.bool.isRequired,
     onCancel: PropTypes.func.isRequired
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      record: {
+
+      }
+    };
   }
 
   render() {
