@@ -109,6 +109,7 @@ class AnnictApp extends Component {
 
         <LoginModal realm={this.realm} />
         <RecordModal
+          annict={this.annict}
           visible={this.state.recordModalVisible}
           onCancel={() => {
             this.setState({ recordModalVisible: false });
