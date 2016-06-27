@@ -117,6 +117,7 @@ class AnnictApp extends Component {
         />
 
         <TabBarIOS
+          style={{paddingBottom: 50}}
           unselectedTintColor='#666'
           tintColor='#f85b73'
           barTintColor='white'>
