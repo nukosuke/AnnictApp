@@ -5,6 +5,7 @@ import { ListView } from 'realm/react-native';
 import { getTheme, mdl } from 'react-native-material-kit';
 import { LoadingSpinner } from './components';
 import ICon from 'react-native-vector-icons/MaterialIcons';
+import { RecordModal } from './record-modal';
 
 const theme = getTheme();
 
@@ -28,9 +29,11 @@ export class WorksPane extends Component {
       works: [],
       // episode list modal follow
       selectedWorkTitle: '',
+      selectedEpisode: { id: null, number_text: '' },
       episodes: [],
       loadingEpisodes: false,
       visibleEpisodes: false,
+      visibleRecordModal: false,
       searchText: ''
     };
 
@@ -100,7 +103,12 @@ export class WorksPane extends Component {
               dataSource={this.ds.cloneWithRows(this.state.episodes)}
               renderRow={rowData => {
                 return (
-                  <TouchableHighlight onPress={() => {}} underlayColor='#ddd'>
+                  <TouchableHighlight
+                    onPress={() => {
+                      this.setState({ visibleRecordModal: true, selectedEpisode: rowData });
+                    }}
+                    underlayColor='#ddd'
+                  >
                     <View style={theme.cardStyle}>
                       <Text style={{padding: 15}}>
                         <Text style={{color: '#666'}}>{rowData.number_text} </Text>
@@ -112,7 +120,18 @@ export class WorksPane extends Component {
               }}
             />
           </View>
+
+          <RecordModal
+            annict={this.props.annict}
+            visible={this.state.visibleRecordModal}
+            title={this.state.selectedWorkTitle}
+            episode={this.state.selectedEpisode}
+            onCancel={() => {
+              this.setState({ visibleRecordModal: false });
+            }}
+          />
         </Modal>
+
 
         <ScrollableTabView
           style={{flex:1}}

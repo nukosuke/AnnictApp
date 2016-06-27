@@ -17,7 +17,9 @@ export class RecordModal extends Component {
   static propTypes = {
     annict: PropTypes.object.isRequired,
     visible: PropTypes.bool.isRequired,
-    onCancel: PropTypes.func.isRequired
+    onCancel: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
+    episode: PropTypes.object.isRequired
   }
 
   constructor(props) {
@@ -63,7 +65,7 @@ export class RecordModal extends Component {
         <StatusBar barStyle='default' />
         <View style={{flex: 1, paddingTop: 28}}>
           <View style={{flexDirection: 'row'}}>
-            <Text style={{flex: 1, paddingHorizontal: 15}}>title #ep_num</Text>
+            <Text style={{flex: 1, paddingHorizontal: 15}}>{this.props.title} {this.props.episode.number_text}</Text>
             <TouchableWithoutFeedback onPress={this.props.onCancel}>
               <View style={{alignItems: 'flex-end', paddingHorizontal: 15}}>
                 <Icon style={{fontSize: 22, color: '#f85b73'}} name='clear' />
