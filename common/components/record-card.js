@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
-import { View, Text }  from 'react-native';
-import { getTheme }    from 'react-native-material-kit';
-import { AnnictColor, TextColor } from './style';
-import Icon            from 'react-native-vector-icons/FontAwesome';
+import { View, Text } from 'react-native';
+import { getTheme } from 'react-native-material-kit';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { AnnictColor, TextColor } from '../constants/style';
 
 const theme = getTheme();
 const style = {
