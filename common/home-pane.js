@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react';
-import { NavigatorIOS, View, ScrollView, Text, Image } from 'react-native';
+import { NavigatorIOS, View, ScrollView, Text, Image, RefreshControl } from 'react-native';
 import { ListView } from 'realm/react-native';
 import { getTheme } from 'react-native-material-kit';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -16,6 +16,7 @@ export class HomePane extends Component {
     super(props);
     this.state ={
       loading: false,
+      refreshing: false,
       records: []
     }
 
@@ -28,6 +29,20 @@ export class HomePane extends Component {
     this.props.annict.Record.get({ sort_id: 'desc' })
     .then(body => {
       this.setState({ loading: false, records: body.records });
+    })
+    .catch(err => {
+      console.log(err);
+      // alert dialog
+    })
+    .done();
+  }
+
+  onRefresh() {
+    this.setState({ refreshing: true });
+
+    this.props.annict.Record.get({ sort_id: 'desc' })
+    .then(body => {
+      this.setState({ refreshing: false, records: body.records });
     })
     .catch(err => {
       console.log(err);
@@ -111,7 +126,17 @@ export class HomePane extends Component {
         <ListView
           enableEmptySections={true}
           dataSource={this.ds.cloneWithRows(this.state.records)}
-          renderScrollComponent={props => <ScrollView style={{flex: 1, marginTop: 65}} />}
+          renderScrollComponent={props =>
+            <ScrollView
+              style={{flex: 1, marginTop: 65}}
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={() => this.onRefresh()}
+                />
+              }
+            />
+          }
           renderRow={(rowData) => {
             return (
               <View style={{paddingHorizontal: 8, paddingVertical: 4}}>
