@@ -129,6 +129,10 @@ export class WorksPane extends Component {
             onCancel={() => {
               this.setState({ visibleRecordModal: false });
             }}
+            onSent={() => {
+              this.setState({ visibleRecordModal: false });
+              //TODO: sent TOAST
+            }}
           />
         </Modal>
 

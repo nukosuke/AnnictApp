@@ -18,6 +18,7 @@ export class RecordModal extends Component {
     annict: PropTypes.object.isRequired,
     visible: PropTypes.bool.isRequired,
     onCancel: PropTypes.func.isRequired,
+    onSent: PropTypes.func.isRequired,
     title: PropTypes.string.isRequired,
     episode: PropTypes.object.isRequired
   }
@@ -58,9 +59,7 @@ export class RecordModal extends Component {
       episode_id, comment, rating, share_twitter, share_facebook
     })
     .then(res => {
-      //TODO: complete toast
-      console.log(res);
-
+      this.props.onSent();
     })
     .catch(err => {console.log(err)})
     .done();
