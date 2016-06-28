@@ -1,11 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { NavigatorIOS, View, ScrollView, Text, Image, RefreshControl } from 'react-native';
 import { ListView } from 'realm/react-native';
-import { getTheme } from 'react-native-material-kit';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { LoadingSpinner } from './components'
-
-const theme = getTheme();
+import { RecordCard, LoadingSpinner } from './components';
 
 export class HomePane extends Component {
   static propTypes = {
@@ -137,22 +133,15 @@ export class HomePane extends Component {
               }
             />
           }
-          renderRow={(rowData) => {
-            return (
-              <View style={{paddingHorizontal: 8, paddingVertical: 4}}>
-                <View style={theme.cardStyle}>
-                  <Text style={{paddingHorizontal: 15, paddingTop: 15}}>
-                    <Text style={{color: '#f85b73'}}>{rowData.user.name}</Text>
-                    <Text style={{color: '#666'}}> が </Text>
-                    <Text style={{color: '#f85b73'}}>{rowData.work.title} {rowData.episode.number_text}</Text>
-                    <Text style={{color: '#666'}}> を見ました</Text>
-                  </Text>
-                  {this.getStarFromRating(rowData.rating)}
-                  {this.renderComment(rowData.comment)}
-                </View>
-              </View>
-            );
-          }}
+          renderRow={(rowData) =>
+            <RecordCard
+              username={rowData.user.name}
+              workTitle={rowData.work.title}
+              episodeText={rowData.episode.number_text}
+              rating={rowData.rating}
+              comment={rowData.comment}
+            />
+          }
         />
       );
     } // /else
