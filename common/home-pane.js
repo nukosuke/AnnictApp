@@ -47,46 +47,6 @@ export class HomePane extends Component {
     .done();
   }
 
-  getStarFromRating(rating) {
-    if(rating === null) {
-      return;
-    }
-    else {
-      const fullStar  = Math.floor(rating);
-      const halfStar  = String(rating).split('.')[1] ? 1 : 0;
-      const emptyStar = 5 - fullStar - halfStar;
-
-      const stars = [].concat(
-        Array(fullStar).fill('star'),
-        halfStar ? ['star-half-o'] : [],
-        Array(emptyStar).fill('star-o')
-      );
-
-      return (
-        <View style={{paddingHorizontal: 15, paddingTop: 8}}>
-          <Text style={{color: '#ff9800'}}>
-            {stars.map((star, idx) => <Icon key={idx} name={star} />)}
-          </Text>
-        </View>
-      );
-    }
-  }
-
-  renderComment(comment) {
-    if(comment === null || comment.length === 0) {
-      return (
-        <View style={{paddingBottom: 15}}></View>
-      );
-    }
-    else {
-      return (
-        <Text style={theme.cardContentStyle}>
-          {comment}
-        </Text>
-      );
-    }
-  }
-
   render() {
     return (
       <View style={{flex:1}}>
