@@ -45,8 +45,12 @@ export class RecordModal extends Component {
   }
 
   sendRequest() {
-    const { comment, rating, share_twitter, share_facebook } = this.state;
+    const { comment, rating } = this.state;
     const episode_id = this.props.episode.id;
+
+    //TODO: annict.jsで対応
+    const share_twitter = this.props.share_twitter ? 'true' : 'false';
+    const share_facebook = this.props.share_facebook ? 'true' : 'false';
 
     this.props.annict.Me.Record.create({
       episode_id, comment, rating, share_twitter, share_facebook
