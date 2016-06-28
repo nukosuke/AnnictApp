@@ -45,14 +45,17 @@ export class RecordModal extends Component {
   }
 
   sendRequest() {
-    const { episode_id, comment, rating, share_twitter, share_facebook } = this.state;
+    const { comment, rating, share_twitter, share_facebook } = this.state;
+    const episode_id = this.props.episode.id;
 
     this.props.annict.Me.Record.create({
       episode_id, comment, rating, share_twitter, share_facebook
     })
     .then(res => {
       //TODO: complete toast
+      console.log(res);
     })
+    .catch(err => {console.log(err)})
     .done();
   }
 
@@ -121,7 +124,7 @@ export class RecordModal extends Component {
             </View>
 
             {/* TODO: button */}
-            <TouchableWithoutFeedback onPress={this.props.onCancel}>
+            <TouchableWithoutFeedback onPress={() => {this.sendRequest()}}>
               <View style={{alignItems: 'flex-end', justifyContent: 'center', paddingHorizontal: 16}}>
                 <Text style={{color: '#f85b73'}}>記録</Text>
               </View>
