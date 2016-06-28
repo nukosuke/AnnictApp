@@ -49,8 +49,10 @@ export class RecordModal extends Component {
     const episode_id = this.props.episode.id;
 
     //TODO: annict.jsで対応
-    const share_twitter = this.props.share_twitter ? 'true' : 'false';
-    const share_facebook = this.props.share_facebook ? 'true' : 'false';
+    const share_twitter = this.state.share_twitter ? 'true' : 'false';
+    const share_facebook = this.state.share_facebook ? 'true' : 'false';
+
+    console.log(share_twitter);
 
     this.props.annict.Me.Record.create({
       episode_id, comment, rating, share_twitter, share_facebook
@@ -58,6 +60,7 @@ export class RecordModal extends Component {
     .then(res => {
       //TODO: complete toast
       console.log(res);
+
     })
     .catch(err => {console.log(err)})
     .done();
@@ -86,21 +89,13 @@ export class RecordModal extends Component {
             onChangeText={text => { this.setState({ comment: text }); }}
           />
           <View  style={{flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#ddd'}}>
-            <MKIconToggle
-
-              checked={this.state.share_twitter}
-              onCheckedChange={() => {this.setState({ share_twitter: !this.state.share_twitter })}}
-            >
-              <FAIcon state_checked={true} style={{fontSize: 22, color: '#00aced'}} name='twitter' />
+            <MKIconToggle onCheckedChange={(event) => { this.setState({ share_twitter: event.checked }) }}>
               <FAIcon style={{fontSize: 22, color: '#ccc'}} name='twitter' />
+              <FAIcon state_checked={true} style={{fontSize: 22, color: '#00aced'}} name='twitter' />
             </MKIconToggle>
-            <MKIconToggle
-
-              checked={this.state.share_facebook}
-              onCheckedChange={() => {this.setState({ share_facebook: !this.state.share_facebook })}}
-            >
-              <FAIcon state_checked={true} style={{fontSize: 22, color: '#305097'}} name='facebook-official' />
+            <MKIconToggle onCheckedChange={(event) => { this.setState({ share_twitter: event.checked }) }}>
               <FAIcon style={{fontSize: 22, color: '#ccc'}} name='facebook-official' />
+              <FAIcon state_checked={true} style={{fontSize: 22, color: '#305097'}} name='facebook-official' />
             </MKIconToggle>
 
             {/* TODO: visible star interface */}
@@ -111,7 +106,6 @@ export class RecordModal extends Component {
             <View style={{flex: 1, justifyContent: 'center', paddingHorizontal: 8}}>
 
               <Slider
-
                 thumbImage={this.state.sliderThumb}
                 minimumValue={0}
                 maximumValue={5}
