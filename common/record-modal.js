@@ -17,7 +17,10 @@ export class RecordModal extends Component {
   static propTypes = {
     annict: PropTypes.object.isRequired,
     visible: PropTypes.bool.isRequired,
-    onCancel: PropTypes.func.isRequired
+    onCancel: PropTypes.func.isRequired,
+    onSent: PropTypes.func.isRequired,
+    title: PropTypes.string.isRequired,
+    episode: PropTypes.object.isRequired
   }
 
   constructor(props) {
@@ -43,14 +46,22 @@ export class RecordModal extends Component {
   }
 
   sendRequest() {
-    const { episode_id, comment, rating, share_twitter, share_facebook } = this.state;
+    const { comment, rating } = this.state;
+    const episode_id = this.props.episode.id;
+
+    //TODO: annict.jsで対応
+    const share_twitter = this.state.share_twitter ? 'true' : 'false';
+    const share_facebook = this.state.share_facebook ? 'true' : 'false';
+
+    console.log(share_twitter);
 
     this.props.annict.Me.Record.create({
       episode_id, comment, rating, share_twitter, share_facebook
     })
     .then(res => {
-      //TODO: complete toast
+      this.props.onSent();
     })
+    .catch(err => {console.log(err)})
     .done();
   }
 
@@ -63,7 +74,7 @@ export class RecordModal extends Component {
         <StatusBar barStyle='default' />
         <View style={{flex: 1, paddingTop: 28}}>
           <View style={{flexDirection: 'row'}}>
-            <Text style={{flex: 1, paddingHorizontal: 15}}>title #ep_num</Text>
+            <Text style={{flex: 1, paddingHorizontal: 15}}>{this.props.title} {this.props.episode.number_text}</Text>
             <TouchableWithoutFeedback onPress={this.props.onCancel}>
               <View style={{alignItems: 'flex-end', paddingHorizontal: 15}}>
                 <Icon style={{fontSize: 22, color: '#f85b73'}} name='clear' />
@@ -77,21 +88,13 @@ export class RecordModal extends Component {
             onChangeText={text => { this.setState({ comment: text }); }}
           />
           <View  style={{flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#ddd'}}>
-            <MKIconToggle
-
-              checked={this.state.share_twitter}
-              onCheckedChange={() => {this.setState({ share_twitter: !this.state.share_twitter })}}
-            >
-              <FAIcon state_checked={true} style={{fontSize: 22, color: '#00aced'}} name='twitter' />
+            <MKIconToggle onCheckedChange={(event) => { this.setState({ share_twitter: event.checked }) }}>
               <FAIcon style={{fontSize: 22, color: '#ccc'}} name='twitter' />
+              <FAIcon state_checked={true} style={{fontSize: 22, color: '#00aced'}} name='twitter' />
             </MKIconToggle>
-            <MKIconToggle
-
-              checked={this.state.share_facebook}
-              onCheckedChange={() => {this.setState({ share_facebook: !this.state.share_facebook })}}
-            >
-              <FAIcon state_checked={true} style={{fontSize: 22, color: '#305097'}} name='facebook-official' />
+            <MKIconToggle onCheckedChange={(event) => { this.setState({ share_twitter: event.checked }) }}>
               <FAIcon style={{fontSize: 22, color: '#ccc'}} name='facebook-official' />
+              <FAIcon state_checked={true} style={{fontSize: 22, color: '#305097'}} name='facebook-official' />
             </MKIconToggle>
 
             {/* TODO: visible star interface */}
@@ -102,7 +105,6 @@ export class RecordModal extends Component {
             <View style={{flex: 1, justifyContent: 'center', paddingHorizontal: 8}}>
 
               <Slider
-
                 thumbImage={this.state.sliderThumb}
                 minimumValue={0}
                 maximumValue={5}
@@ -119,7 +121,7 @@ export class RecordModal extends Component {
             </View>
 
             {/* TODO: button */}
-            <TouchableWithoutFeedback onPress={this.props.onCancel}>
+            <TouchableWithoutFeedback onPress={() => {this.sendRequest()}}>
               <View style={{alignItems: 'flex-end', justifyContent: 'center', paddingHorizontal: 16}}>
                 <Text style={{color: '#f85b73'}}>記録</Text>
               </View>

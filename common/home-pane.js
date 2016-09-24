@@ -1,11 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { NavigatorIOS, View, ScrollView, Text, Image } from 'react-native';
+import { NavigatorIOS, View, ScrollView, Text, Image, RefreshControl } from 'react-native';
 import { ListView } from 'realm/react-native';
-import { getTheme } from 'react-native-material-kit';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { LoadingSpinner } from './components'
-
-const theme = getTheme();
+import { RecordCard, LoadingSpinner } from './components';
 
 export class HomePane extends Component {
   static propTypes = {
@@ -16,6 +12,7 @@ export class HomePane extends Component {
     super(props);
     this.state ={
       loading: false,
+      refreshing: false,
       records: []
     }
 
@@ -36,44 +33,18 @@ export class HomePane extends Component {
     .done();
   }
 
-  getStarFromRating(rating) {
-    if(rating === null) {
-      return;
-    }
-    else {
-      const fullStar  = Math.floor(rating);
-      const halfStar  = String(rating).split('.')[1] ? 1 : 0;
-      const emptyStar = 5 - fullStar - halfStar;
+  onRefresh() {
+    this.setState({ refreshing: true });
 
-      const stars = [].concat(
-        Array(fullStar).fill('star'),
-        halfStar ? ['star-half-o'] : [],
-        Array(emptyStar).fill('star-o')
-      );
-
-      return (
-        <View style={{paddingHorizontal: 15, paddingTop: 8}}>
-          <Text style={{color: '#ff9800'}}>
-            {stars.map((star, idx) => <Icon key={idx} name={star} />)}
-          </Text>
-        </View>
-      );
-    }
-  }
-
-  renderComment(comment) {
-    if(comment === null || comment.length === 0) {
-      return (
-        <View style={{paddingBottom: 15}}></View>
-      );
-    }
-    else {
-      return (
-        <Text style={theme.cardContentStyle}>
-          {comment}
-        </Text>
-      );
-    }
+    this.props.annict.Record.get({ sort_id: 'desc' })
+    .then(body => {
+      this.setState({ refreshing: false, records: body.records });
+    })
+    .catch(err => {
+      console.log(err);
+      // alert dialog
+    })
+    .done();
   }
 
   render() {
@@ -111,23 +82,26 @@ export class HomePane extends Component {
         <ListView
           enableEmptySections={true}
           dataSource={this.ds.cloneWithRows(this.state.records)}
-          renderScrollComponent={props => <ScrollView style={{flex: 1, marginTop: 65}} />}
-          renderRow={(rowData) => {
-            return (
-              <View style={{paddingHorizontal: 8, paddingVertical: 4}}>
-                <View style={theme.cardStyle}>
-                  <Text style={{paddingHorizontal: 15, paddingTop: 15}}>
-                    <Text style={{color: '#f85b73'}}>{rowData.user.name}</Text>
-                    <Text style={{color: '#666'}}> が </Text>
-                    <Text style={{color: '#f85b73'}}>{rowData.work.title} {rowData.episode.number_text}</Text>
-                    <Text style={{color: '#666'}}> を見ました</Text>
-                  </Text>
-                  {this.getStarFromRating(rowData.rating)}
-                  {this.renderComment(rowData.comment)}
-                </View>
-              </View>
-            );
-          }}
+          renderScrollComponent={props =>
+            <ScrollView
+              style={{flex: 1, marginTop: 65}}
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.refreshing}
+                  onRefresh={() => this.onRefresh()}
+                />
+              }
+            />
+          }
+          renderRow={(rowData) =>
+            <RecordCard
+              username={rowData.user.name}
+              workTitle={rowData.work.title}
+              episodeText={rowData.episode.number_text}
+              rating={rowData.rating}
+              comment={rowData.comment}
+            />
+          }
         />
       );
     } // /else

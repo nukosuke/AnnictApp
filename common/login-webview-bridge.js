@@ -50,7 +50,8 @@ export class LoginWebViewBridge extends Component {
           })
         })
         .then(response => response.json())
-        .then(onGetToken)
+        .then(json => onGetToken(json))
+        .catch(err => console.log(err))
         .done();
         break;
     }
@@ -60,9 +61,9 @@ export class LoginWebViewBridge extends Component {
     return (
       <WebViewBridge
         ref='auth_webview_bridge'
-        onBridgeMessage={this.onBridgeMessage}
+        onBridgeMessage={(message) => this.onBridgeMessage(message)}
         injectedJavaScript={injectJavaScript}
-        source={{uri: `${AUTHORIZE_URI}?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}`}}
+        source={{uri: `${AUTHORIZE_URI}?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=read+write`}}
       />
     );
   }

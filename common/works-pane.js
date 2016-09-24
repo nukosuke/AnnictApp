@@ -1,9 +1,11 @@
 import React, { Component, PropTypes } from 'react';
-import { View, Text, TextInput, ScrollView } from 'react-native';
+import { View, Text, TextInput, ScrollView, TouchableHighlight, TouchableWithoutFeedback, Modal } from 'react-native';
 import ScrollableTabView from 'react-native-scrollable-tab-view';
 import { ListView } from 'realm/react-native';
 import { getTheme, mdl } from 'react-native-material-kit';
 import { LoadingSpinner } from './components';
+import ICon from 'react-native-vector-icons/MaterialIcons';
+import { RecordModal } from './record-modal';
 
 const theme = getTheme();
 
@@ -25,6 +27,14 @@ export class WorksPane extends Component {
     this.state = {
       loading: true,
       works: [],
+      // episode list modal follow
+      selectedWorkTitle: '',
+      selectedEpisode: { id: null, number_text: '' },
+      episodes: [],
+      loadingEpisodes: false,
+      visibleEpisodes: false,
+      visibleRecordModal: false,
+      searchText: ''
     };
 
     this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -53,15 +63,79 @@ export class WorksPane extends Component {
     this.fetchWorks({ statusIndex: 0 });
   }
 
+  onPressRow(rowData) {
+    this.setState({ selectedWorkTitle: rowData.title, loadingEpisodes: true, visibleEpisodes: true, episodes: [] });
+
+    this.props.annict.Episode.get({
+      filter_work_id: rowData.id,
+      sort_sort_number: 'asc'
+    })
+    .then(res => {
+      this.setState({ loadingEpisodes: false, episodes: res.episodes });
+    })
+    .done();
+  }
+
   render() {
     return (
       <View style={{flex:1}}>
-        <View style={{height: 64, paddingHorizontal: 10, paddingTop: 28, paddingBottom: 8, backgroundColor: '#444'}}>
+        <View style={{height: 64, paddingHorizontal: 32, paddingTop: 28, paddingBottom: 8, backgroundColor: '#444'}}>
           <TextInput
             style={{height: 25, borderRadius: 2, borderColor: '#e1e1e1', borderWidth: 1, backgroundColor: 'white', padding: 4, fontSize: 12}}
             placeholder='キーワードで検索...'
+            value={this.state.searchText}
           />
         </View>
+
+        <Modal animationType='fade' visible={this.state.visibleEpisodes}>
+          <View style={{flex: 1, paddingTop: 20}}>
+            <View style={{flexDirection: 'row'}}>
+              <TouchableWithoutFeedback onPress={() => this.setState({visibleEpisodes: false})}>
+                <ICon style={{fontSize: 30, color: '#f85b73'}} name='navigate-before' />
+              </TouchableWithoutFeedback>
+              <Text style={{alignSelf: 'center', color: '#666'}}>{this.state.selectedWorkTitle}</Text>
+            </View>
+
+            {this.renderSpinner(this.state.loadingEpisodes)}
+            <ListView
+              style={{flex:1}}
+              enableEmptySections={true}
+              dataSource={this.ds.cloneWithRows(this.state.episodes)}
+              renderRow={rowData => {
+                return (
+                  <TouchableHighlight
+                    onPress={() => {
+                      this.setState({ visibleRecordModal: true, selectedEpisode: rowData });
+                    }}
+                    underlayColor='#ddd'
+                  >
+                    <View style={theme.cardStyle}>
+                      <Text style={{padding: 15}}>
+                        <Text style={{color: '#666'}}>{rowData.number_text} </Text>
+                        <Text style={{color: '#f85b73'}}>{rowData.title}</Text>
+                      </Text>
+                    </View>
+                  </TouchableHighlight>
+                );
+              }}
+            />
+          </View>
+
+          <RecordModal
+            annict={this.props.annict}
+            visible={this.state.visibleRecordModal}
+            title={this.state.selectedWorkTitle}
+            episode={this.state.selectedEpisode}
+            onCancel={() => {
+              this.setState({ visibleRecordModal: false });
+            }}
+            onSent={() => {
+              this.setState({ visibleRecordModal: false });
+              //TODO: sent TOAST
+            }}
+          />
+        </Modal>
+
 
         <ScrollableTabView
           style={{flex:1}}
@@ -82,11 +156,13 @@ export class WorksPane extends Component {
                   renderScrollComponent={(props) => <ScrollView style={{flex:1}}/>}
                   renderRow={(rowData) => {
                     return (
-                      <View style={theme.cardStyle}>
-                      <View style={{padding: 15, flex:1}}>
-                        <Text style={{color: '#f85b73', flex:1}}>{rowData.title}</Text>
-                      </View>
-                      </View>
+                      <TouchableHighlight onPress={() => this.onPressRow(rowData)} underlayColor='#ddd'>
+                        <View style={theme.cardStyle}>
+                          <View style={{padding: 15, flex:1}}>
+                            <Text style={{color: '#f85b73', flex:1}}>{rowData.title}</Text>
+                          </View>
+                        </View>
+                      </TouchableHighlight>
                     );
                   }}
                 />

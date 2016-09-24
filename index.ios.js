@@ -108,6 +108,7 @@ class AnnictApp extends Component {
         />
 
         <LoginModal realm={this.realm} />
+        {/*
         <RecordModal
           annict={this.annict}
           visible={this.state.recordModalVisible}
@@ -115,6 +116,7 @@ class AnnictApp extends Component {
             this.setState({ recordModalVisible: false });
           }}
         />
+        */}
 
         <TabBarIOS
           style={{paddingBottom: 50}}
